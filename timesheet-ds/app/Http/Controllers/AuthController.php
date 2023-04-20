@@ -35,10 +35,10 @@ class AuthController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            return view('dashboard');
+            return redirect()->route('dashboard');
         }
 
-        return redirect()->back()->withErrors('Password or email not correct !')->withInput();
+        return redirect()->back()->with('error', 'Password or email not correct !')->withInput();
     }
 
     /**
@@ -51,7 +51,7 @@ class AuthController extends Controller
 
 
     /**
-     * Post form registe
+     * Post form register
      */
     public function postRegister(RegisterRequest $request)
     {
@@ -67,7 +67,7 @@ class AuthController extends Controller
 
             if($request->hasFile('avatar'))
             {
-                $filename = $request->file('avatar')->getClientOriginalName().'_'.time();
+                $filename = time() . '_' . $request->file('avatar')->getClientOriginalName();
                 $request->file('avatar')->move('images/user/', $filename);
                 $userCreate['avatar'] = $filename;
             }
@@ -91,5 +91,13 @@ class AuthController extends Controller
 
             return back()->withError($ex->getMessage())->withInput();
         }
+    }
+
+    /**
+     * Logout
+     */
+    public function logout()
+    {
+        return redirect('login')->with(Auth::logout());
     }
 }
