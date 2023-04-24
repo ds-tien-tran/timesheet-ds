@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,15 @@ Route::middleware(['checkLogin'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     //User
-    Route::get('/user/edit/{id}', [UserController::class, 'show'])->name('user.edit');
-    Route::patch('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::name('user.')->prefix('user')->group(function() {
+        Route::get('edit/{id}', [UserController::class, 'show'])->name('edit');
+        Route::patch('update/{id}', [UserController::class, 'update'])->name('update');
+    });
+
+    //Timesheet
+    Route::name('timesheet.')->prefix('timesheet')->group(function() {
+        Route::get('create', [TimesheetController::class, 'create'])->name('create');
+        Route::post('store', [TimesheetController::class, 'store'])->name('store');
+    });
+
 });
