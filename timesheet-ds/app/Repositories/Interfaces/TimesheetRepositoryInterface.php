@@ -2,9 +2,10 @@
 
 namespace App\Repositories\Interfaces;
 
-use Illuminate\Database\Eloquent\Model;
-
 interface TimesheetRepositoryInterface 
 {
     public function create(array $attibutes = []);
+    public function getAll();
+    public function getById($id);
+    public function update($id, $request);
 }

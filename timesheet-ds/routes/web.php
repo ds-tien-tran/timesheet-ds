@@ -40,6 +40,10 @@ Route::middleware(['checkLogin'])->group(function () {
     Route::name('timesheet.')->prefix('timesheet')->group(function() {
         Route::get('create', [TimesheetController::class, 'create'])->name('create');
         Route::post('store', [TimesheetController::class, 'store'])->name('store');
+        Route::get('list', [TimesheetController::class, 'list'])->name('list');
+        Route::get('get-all-data', [TimesheetController::class, 'getDataAllTimesheet'])->name('getAll');
+        Route::get('show/{id}', [TimesheetController::class, 'show'])->name('show');
+        Route::patch('update/{id}', [TimesheetController::class, 'update'])->name('update');
     });
 
 });
