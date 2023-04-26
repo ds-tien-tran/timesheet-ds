@@ -4,17 +4,16 @@ namespace App\Services;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\UserRepository;
+use App\Services\Interfaces\UserServiceInterface;
 use Exception;
 use Illuminate\Support\Facades\File;
 
-class UserService
+class UserService implements UserServiceInterface
 {
-    private UserRepository $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct(protected UserRepositoryInterface $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
     /**

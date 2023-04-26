@@ -20,4 +20,12 @@ class Timesheet extends Model
     CONST STATUS_REJECT = 3;  
 
     protected $fillable = ['user_id', 'day_selected', 'plan', 'note', 'status', 'dayoff'];
+
+    /**
+     * Get task for timesheet
+     */
+    public function tasks()
+    {
+       return $this->hasMany(Task::class, 'timesheet_id', 'id');
+    }
 }
