@@ -41,9 +41,24 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('create', [TimesheetController::class, 'create'])->name('create');
         Route::post('store', [TimesheetController::class, 'store'])->name('store');
         Route::get('list', [TimesheetController::class, 'list'])->name('list');
-        Route::get('get-all-data', [TimesheetController::class, 'getDataAllTimesheet'])->name('getAll');
+        Route::get('get-all-data/{id}', [TimesheetController::class, 'getAllByUser'])->name('getAll');
         Route::get('show/{id}', [TimesheetController::class, 'show'])->name('show');
         Route::patch('update/{id}', [TimesheetController::class, 'update'])->name('update');
     });
 
+    //Admin
+    Route::middleware(['checkAdmin'])->group(function () {
+        Route::name('user.')->prefix('user')->group(function() {
+            Route::get('list', [UserController::class, 'list'])->name('list');
+            Route::delete('destroy/{user}', [UserController::class, 'destroy'])->name('destroy');
+            Route::get('info-user/{user}', [UserController::class, 'infoUser'])->name('infoUser');
+            Route::patch('change-role/{user}', [UserController::class, 'changeRole'])->name('changeRole');
+        });
+
+        Route::name('timesheet.')->prefix('timesheet')->group(function() {
+            Route::get('list-timesheet/{userId}', [TimesheetController::class, 'listTimesheet'])->name('listTimesheet');
+            Route::get('show-detail/{timesheet}', [TimesheetController::class, 'showDetail'])->name('showDetail');
+            Route::patch('change-status/{timesheet}', [TimesheetController::class, 'changeStatus'])->name('changeStatus');
+        });
+    });
 });

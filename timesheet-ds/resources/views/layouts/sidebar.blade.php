@@ -36,6 +36,14 @@
             <i class="fas fa-fw fa-table"></i>
             <span>List Timesheet</span></a>
     </li>
+    <!-- Nav Item - Tables -->
+    @can('seen', Auth::user())    
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('user.list')}}">
+                <i class="fas fa-fw fa-table"></i>
+                <span>List User-Report</span></a>
+        </li>
+    @endcan
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

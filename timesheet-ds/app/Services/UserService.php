@@ -4,15 +4,20 @@ namespace App\Services;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Repositories\Interfaces\RoleUserRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\UserRepository;
 use App\Services\Interfaces\UserServiceInterface;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 class UserService implements UserServiceInterface
 {
-    public function __construct(protected UserRepositoryInterface $userRepository)
+    public function __construct(
+        protected UserRepositoryInterface $userRepository, 
+        protected RoleUserRepositoryInterface $roleUserRepository
+        )
     {
     }
 
@@ -51,6 +56,44 @@ class UserService implements UserServiceInterface
             $user->avatar = $filename;
         }
 
+        $user->save();
+
+        return $user;
+    }
+
+    /**
+     * Get list user
+     */
+    public function getList()
+    {
+        return $this->userRepository->getList();
+    } 
+
+    /**
+     * Delete a user
+     */
+    public function destroy($user)
+    {
+        if (Auth::check() && Auth::user()->id == $user->id)
+        {
+            throw new Exception('You can not delete user login');
+        }
+        return $this->userRepository->destroy($user);
+    }
+
+    /**
+     * Change role user
+     */
+    public function changeRole($user, $request)
+    {
+        //xử lí change role
+        $user = $this->roleUserRepository->getRoleById($user);
+        if (!$user)
+        {
+            throw new Exception('User have not role!');
+        }
+        //update role_id
+        $user->role_id = $request['role'];
         $user->save();
 
         return $user;
