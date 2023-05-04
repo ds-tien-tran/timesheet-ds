@@ -9,11 +9,14 @@ use App\Repositories\TaskRepository;
 use App\Services\Interfaces\TaskServiceInterface;
 use App\Services\Interfaces\TimesheetServiceInterface;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TimesheetService implements TimesheetServiceInterface
 {
+    use AuthorizesRequests;
 
     public function __construct(
         protected TimesheetRepositoryInterface $timesheetRepository,
@@ -64,28 +67,41 @@ class TimesheetService implements TimesheetServiceInterface
     /**
      * Get All data timesheet
      */
-    public function getAll()
+    public function getAllByUser($id, $request)
     {
-       return $this->timesheetRepository->getAll();
+        
+       return $this->timesheetRepository->getAllByUser($id, $request);
     }
 
     /**
      * Get one timesheet by id
      */
-    public function getById($id)
+    public function getById($user, $id)
     {
-        return $this->timesheetRepository->getById($id);
+        $timesheet = $this->timesheetRepository->getById($id);
+        if (!$this->authorize('show', $timesheet))
+        {
+            throw new AuthorizationException("You don't have role");
+        }
+        
+        return $timesheet;
     }
 
     /**
      * Update a timesheet
      */
-    public function update($id, $request)
+    public function update($user, $id, $request)
     {
+        $timesheet = $this->getById($user, $id);
+        if (!$this->authorize('update', $timesheet))
+        {
+            throw new AuthorizationException('You can not edit timesheet');
+        }
+
         DB::beginTransaction();
         try {
             $tasks = $request->only('tasks');
-            $timesheet = $this->getById($id);
+            
             // Update timesheet
             $this->timesheetRepository->update($id, $request->except('tasks'));
             // Delete list task old
@@ -109,5 +125,20 @@ class TimesheetService implements TimesheetServiceInterface
         } catch (Exception $ex) {
             DB::rollBack();
         }
+    }
+
+    /**
+     * Update status timesheet
+     */
+    public function changeStatus($user, $timesheetId, $request)
+    {
+        $timesheet = $this->getById($user, $timesheetId);
+
+        if (!$this->authorize('update', $timesheet))
+        {
+            throw new AuthorizationException('You can not edit timesheet');
+        }
+
+        return $this->timesheetRepository->update($timesheetId, $request);
     }
 }

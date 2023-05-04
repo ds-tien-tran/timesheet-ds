@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Timesheet;
+use App\Repositories\Interfaces\RoleUserRepositoryInterface;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
 use App\Repositories\Interfaces\TimesheetRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -26,7 +27,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserServiceInterface::class, UserService::class
         , function($app) {
             return new UserService(
-                $app->make(UserRepositoryInterface::class)
+                $app->make(UserRepositoryInterface::class),
+                $app->make(RoleUserRepositoryInterface::class)
             );
         });
 

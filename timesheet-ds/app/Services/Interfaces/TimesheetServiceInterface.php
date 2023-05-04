@@ -2,10 +2,13 @@
 
 namespace App\Services\Interfaces;
 
+use App\Models\User;
+
 interface TimesheetServiceInterface
 {
    public function store($request);
-   public function getAll();
-   public function getById($id);
-   public function update($id, $request);
+   public function getAllByUser($id, $request);
+   public function getById(User $user, $id);
+   public function update(User $user, $id, $request);
+   public function changeStatus(User $user, $timesheetId, $request);
 }

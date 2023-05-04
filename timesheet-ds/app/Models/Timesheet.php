@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Timesheet extends Model
 {
-    use HasFactory;
+    use HasFactory, AuthorizesRequests;
 
     protected $table = 'timesheets';
 
@@ -27,5 +28,13 @@ class Timesheet extends Model
     public function tasks()
     {
        return $this->hasMany(Task::class, 'timesheet_id', 'id');
+    }
+
+    /**
+     * Get user that owns timesheet
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

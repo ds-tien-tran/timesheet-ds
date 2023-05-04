@@ -17,7 +17,7 @@
             events: function(start, end, timezone, callback) { 
                 $.ajax({
                     type: "GET",
-                    url: "{{route('timesheet.getAll')}}",
+                    url: "{{route('timesheet.getAll',['id' => Auth::user()->id])}}",
                     dataType: "json",
                     success: function (doc) {
                         var events = [];   //javascript event object created here
