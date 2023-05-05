@@ -23,7 +23,15 @@ class TimesheetRepository implements TimesheetRepositoryInterface
     /**
      * Get all data timesheet
      */
-    public function getAllByUser($id, $request)
+    public function getAllByUser($id)
+    {
+        return  $sql = $this->timesheet->where('user_id', $id)->get();     
+    }
+
+    /**
+     * Get all data timesheet role admin
+     */
+    public function getAllByUserRoleAdmin($id, $request)
     {
         $sql = $this->timesheet->where('user_id', $id);
         $monthSelect = $request->input('month_select');

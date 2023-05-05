@@ -37,7 +37,7 @@
             <span>List Timesheet</span></a>
     </li>
     <!-- Nav Item - Tables -->
-    @can('seen')    
+    @can('seen', App\Models\User::class)    
         <li class="nav-item">
             <a class="nav-link" href="{{route('user.list')}}">
                 <i class="fas fa-fw fa-table"></i>
