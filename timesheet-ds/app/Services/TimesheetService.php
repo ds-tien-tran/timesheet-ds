@@ -39,7 +39,7 @@ class TimesheetService implements TimesheetServiceInterface
                 'day_selected' => $request->input('day_selected') ?? '',
                 'plan' => $request->input('plan') ?? '',
                 'note' => $request->input('note') ?? '',
-                'status' => Timesheet::STATUS_OPEN, 
+                'status' => Timesheet::STATUS_OPEN,
                 'dayoff' => Timesheet::WORK,
             ];
 
@@ -67,10 +67,17 @@ class TimesheetService implements TimesheetServiceInterface
     /**
      * Get All data timesheet
      */
-    public function getAllByUser($id, $request)
+    public function getAllByUser($id)
     {
-        
-       return $this->timesheetRepository->getAllByUser($id, $request);
+       return $this->timesheetRepository->getAllByUser($id);
+    }
+
+    /**
+     * Get All data timesheet role admin
+     */
+    public function getAllByUserRoleAdmin($id, $request)
+    {
+        return $this->timesheetRepository->getAllByUserRoleAdmin($id, $request);
     }
 
     /**
@@ -78,26 +85,14 @@ class TimesheetService implements TimesheetServiceInterface
      */
     public function getById($user, $id)
     {
-        $timesheet = $this->timesheetRepository->getById($id);
-        if (!$this->authorize('show', $timesheet))
-        {
-            throw new AuthorizationException("You don't have role");
-        }
-        
-        return $timesheet;
+        return $this->timesheetRepository->getById($id);
     }
 
     /**
      * Update a timesheet
      */
-    public function update($user, $id, $request)
+    public function update($timesheet, $id, $request)
     {
-        $timesheet = $this->getById($user, $id);
-        if (!$this->authorize('update', $timesheet))
-        {
-            throw new AuthorizationException('You can not edit timesheet');
-        }
-
         DB::beginTransaction();
         try {
             $tasks = $request->only('tasks');
