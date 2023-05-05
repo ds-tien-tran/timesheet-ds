@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TimesheetsExport;
 use App\Http\Requests\CreateTimesheetRequest;
 use App\Http\Requests\EditTimesheetRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -11,6 +12,7 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TimesheetController extends Controller
 {
@@ -126,5 +128,13 @@ class TimesheetController extends Controller
         }
 
         return redirect()->back()->with('success', 'Change status timesheet success');
+    }
+
+    /**
+     * Export timesheet
+     */
+    public function exportTimesheet($id, Request $request)
+    {
+        return Excel::download(new TimesheetsExport($id, $request->all()), date('YmdHis').'Timesheet.xlsx');
     }
 }
