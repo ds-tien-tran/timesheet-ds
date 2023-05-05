@@ -4,12 +4,18 @@
 <div class="card shadow mb-4">
     {{-- d-flex align-items-center justify-content-between --}}
     <div class="d-flex d-inline m-4 justify-content-between">
-        <form action="{{ route('timesheet.listTimesheet', $user->id)}}" class="d-flex" method="GET">
-            <input class="mr-2 form-control w-200p" name="month_select" type="month" id='monthSelect'>
+        <form id='formMonth' action="{{ route('timesheet.listTimesheet', $user->id)}}" class="d-flex" method="GET">
+            @csrf
+            <input class="mr-2 form-control w-200p monthSelect" name="month_select" type="month">
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
         <div class="ml-4">
-            <a href="" class="btn btn-success"><i class="fas fa-file-download mr-2"></i>Export timesheet</a>
+            <form method="GET" action="{{ route('timesheet.exportTimesheet', $user->id) }}">
+                @csrf
+                <input class="mr-2 form-control w-200p monthSelect" name="month_select" type="month" hidden>
+                {{-- <a href="{{ route('timesheet.exportTimesheet', $user->id) }}" class="btn btn-success" form='formMonth'><i class="fas fa-file-download mr-2"></i>Export timesheet</a> --}}
+                <button type="submit" class="btn btn-success"><i class="fas fa-file-download mr-2"></i>Export timesheet</button>
+            </form>
         </div>
     </div>
     
@@ -57,12 +63,12 @@
     $(document).ready(function(){
         if(window.location.href.indexOf("month_select") != -1) {
             const month_select = location.search.split('month_select=')[1];
-            $('#monthSelect').val(`${month_select.slice(0,4)}-${month_select.slice(-2)}`);
+            $('.monthSelect').val(`${month_select.slice(0,4)}-${month_select.slice(-2)}`);
         } else {
             const date = new Date()
             const month = ("0" + (date.getMonth() + 1)).slice(-2)
             const year = date.getFullYear()
-            $('#monthSelect').val(`${year}-${month}`);
+            $('.monthSelect').val(`${year}-${month}`);
         }
     })
 </script>

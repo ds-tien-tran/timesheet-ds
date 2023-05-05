@@ -59,6 +59,7 @@ Route::middleware(['checkLogin'])->group(function () {
             Route::get('list-timesheet/{userId}', [TimesheetController::class, 'listTimesheet'])->name('listTimesheet');
             Route::get('show-detail/{timesheet}', [TimesheetController::class, 'showDetail'])->name('showDetail');
             Route::patch('change-status/{timesheet}', [TimesheetController::class, 'changeStatus'])->name('changeStatus');
+            Route::get('export-timesheet/{userId}', [TimesheetController::class, 'exportTimesheet'])->name('exportTimesheet');
         });
     });
 });
