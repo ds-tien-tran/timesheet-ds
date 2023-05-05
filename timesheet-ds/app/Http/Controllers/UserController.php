@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -45,7 +46,26 @@ class UserController extends Controller
      */
     public function list()
     {
-        $users = $this->userService->getList();
+        $users = [];
+        //Check admin show all , Manager show user's
+        if (Auth::user())
+        {
+            foreach(Auth::user()->roles as $role)
+            {
+                if ($role->name == 'admin')
+                {
+                    $users = $this->userService->getList();
+                }
+                if ($role->name == 'manager')
+                {
+                    $users = $this->userService->getListByManager(Auth::user()->id);
+                    // dd($users);
+                }
+            }
+        
+        }
+        // $users = $this->userService->getList();
+        // dd($users);
         
         return view('user.list', compact('users'));
     }
@@ -89,5 +109,51 @@ class UserController extends Controller
         {
             return redirect()->back()->with('error', 'Update role error');
         }
+    }
+
+    /**
+     * Get list manager
+     */
+    public function listManager()
+    {
+        $managers = $this->userService->listManager();
+
+        return view('user.list_manager', compact('managers'));
+    }
+    
+        
+    /**
+     * Get list user by manager 
+     *
+     * @param  mixed $userId
+     * @return void
+     */
+    public function listManagerUser($userId)
+    {
+        $manager = $this->userService->show($userId);
+        $users = $this->userService->listManagerUser($userId);
+
+        return view('user.list_manager_user', compact('users', 'manager'));
+    }
+        
+    /**
+     * Get list user not manager
+     *
+     * @return void
+     */
+    public function listUserNoManager()
+    {
+        return $this->userService->listUserNoManager();
+    }
+    
+    /**
+     * search user no manager
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function searchUserNoManager(Request $request)
+    {
+        return $this->userService->searchUserNoManager($request->all());
     }
 }

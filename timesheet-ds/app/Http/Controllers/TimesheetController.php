@@ -8,6 +8,7 @@ use App\Http\Requests\EditTimesheetRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Interfaces\TaskServiceInterface;
 use App\Services\Interfaces\TimesheetServiceInterface;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -69,11 +70,8 @@ class TimesheetController extends Controller
      */
     public function show($id)
     {
-        try {
-            $timesheet = $this->timesheetService->getById(Auth::user(), $id);
-        } catch (AuthorizationException $e) {
-            return abort(404);
-        }
+        $timesheet = $this->timesheetService->getById(Auth::user(), $id);
+        $this->authorize('show', $timesheet);
 
         return view('timesheet.edit', compact('timesheet')) ;
     }
@@ -83,10 +81,11 @@ class TimesheetController extends Controller
      */
     public function update($id, EditTimesheetRequest $request)
     {
+        $timesheet = $this->timesheetService->getById(Auth::user(), $id);
+        $this->authorize('update', $timesheet);
+
         try {
-           $this->timesheetService->update(Auth::user(), $id, $request);
-        } catch (AuthorizationException $e) {
-            return redirect()->back()->with('error', 'You can not edit!');
+           $this->timesheetService->update($timesheet, $id, $request);
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Edit timesheet fail!');
         }
@@ -99,7 +98,7 @@ class TimesheetController extends Controller
      */
     public function listTimesheet($userId, Request $request)
     {
-        $timesheets = $this->timesheetService->getAllByUser($userId, $request);
+        $timesheets = $this->timesheetService->getAllByUserRoleAdmin($userId, $request);
         $user = $this->userRepository->getUserById($userId);
 
         return view('timesheet.list_report', compact('timesheets', 'user'));
@@ -135,6 +134,6 @@ class TimesheetController extends Controller
      */
     public function exportTimesheet($id, Request $request)
     {
-        return Excel::download(new TimesheetsExport($id, $request->all()), date('YmdHis').'Timesheet.xlsx');
+        return Excel::download(new TimesheetsExport($id, $request->all()), Carbon::now()->format('YmdHis').'Timesheet.xlsx');
     }
 }

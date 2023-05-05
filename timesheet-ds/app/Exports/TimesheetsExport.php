@@ -25,6 +25,7 @@ class TimesheetsExport implements FromCollection, WithHeadings, WithMapping, Sho
     */
     public function collection()
     {
+        dd(333);
         $monthSelect = $this->request['month_select'];
         $firstDate = date($monthSelect.'-01 00:00:00');
         $endDate = date($monthSelect.'-t 23:59:59');
@@ -41,6 +42,8 @@ class TimesheetsExport implements FromCollection, WithHeadings, WithMapping, Sho
     */
     public function headings() :array
     {
+        dd(11);
+        dd(22);
         return ["Name","Day_selected", "Plan", "Note", "Status", "Dayoff", "Created_at"];
     }
     /**

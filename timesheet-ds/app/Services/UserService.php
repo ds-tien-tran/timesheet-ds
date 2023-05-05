@@ -98,4 +98,46 @@ class UserService implements UserServiceInterface
 
         return $user;
     }
+
+    /**
+     * Get list user
+     */
+    public function getListByManager($id)
+    {
+        return $this->userRepository->getListByManager($id);
+    } 
+
+    /**
+     * Get list manager
+     */
+    public function listManager()
+    {
+        return $this->userRepository->listManager();
+    }
+    
+    /**
+     * Get list user by manager
+     *
+     * @param  mixed $userId
+     * @return void
+     */
+    public function listManagerUser($userId)
+    {
+        return $this->userRepository->listManagerUser($userId);
+    }
+    
+    /**
+     * Get list user no manager
+     *
+     * @return void
+     */
+    public function listUserNoManager()
+    {
+        return $this->userRepository->listUserNoManager();
+    }
+
+    public function searchUserNoManager($request)
+    {
+        return $this->userRepository->searchUserNoManager($request);
+    }
 }

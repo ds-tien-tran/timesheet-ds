@@ -31,6 +31,17 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('seen', function(User $user) {
             foreach ($user->roles as $role) {
+                if ($role->name == 'admin' || $role->name == 'manager')
+                {
+                    return true;
+                }
+            }
+        
+            return false;
+        });
+
+        Gate::define('seenAdmin', function(User $user) {
+            foreach ($user->roles as $role) {
                 if ($role->name == 'admin')
                 {
                     return true;

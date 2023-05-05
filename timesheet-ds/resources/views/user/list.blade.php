@@ -21,8 +21,11 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
+                                @can('seenAdmin')
                                 <a href="{{route('user.infoUser', $user->id)}}" class="btn btn-primary"><i class="fas fa-user-edit"></i></a>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{$key + 1}}"><i class="fas fa-solid fa-trash"></i></button>
+                                @endcan
+                               
                                 <a href="{{route('timesheet.listTimesheet', $user->id)}}" class="btn btn-success"><i class="fas fa-file-word"></i></a>
                             </td>
                         </tr>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -57,6 +58,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Take user belong to the role-user 
+     */
+    public function roleUser(): HasOne
+    {
+        return $this->hasOne(RoleUser::class, 'user_id', 'id');
+    }
+
+    /**
      * Check user has role admin
      */
     public function isAdmin()
@@ -72,7 +81,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check user has role admin
+     * Check user has role manager
      */
     public function isManager()
     {
@@ -87,7 +96,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check user has role admin
+     * Check user has role user
      */
     public function isUser()
     {

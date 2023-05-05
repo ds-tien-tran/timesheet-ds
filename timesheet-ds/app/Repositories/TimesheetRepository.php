@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Timesheet;
 use App\Repositories\Interfaces\TimesheetRepositoryInterface;
+use Carbon\Carbon;
 
 class TimesheetRepository implements TimesheetRepositoryInterface 
 {
@@ -23,12 +24,19 @@ class TimesheetRepository implements TimesheetRepositoryInterface
     /**
      * Get all data timesheet
      */
-    public function getAllByUser($id, $request)
+    public function getAllByUser($id)
+    {
+        return  $sql = $this->timesheet->where('user_id', $id)->get();     
+    }
+
+    /**
+     * Get all data timesheet role admin
+     */
+    public function getAllByUserRoleAdmin($id, $request)
     {
         $sql = $this->timesheet->where('user_id', $id);
-        $monthSelect = $request->input('month_select');
-        $firstDate = date('Y-m-01 00:00:00');
-        $endDate = date('Y-m-d 23:59:59');
+        $firstDate = Carbon::now()->format('Y-m-01 00:00:00');
+        $endDate = Carbon::now()->format('Y-m-d 23:59:59');
 
         if ($request->has('month_select'))
         {
@@ -40,6 +48,20 @@ class TimesheetRepository implements TimesheetRepositoryInterface
         return $sql->where('day_selected', '>=', $firstDate)
             ->where('day_selected', '<=', $endDate)
             ->get();
+    }
+
+    /**
+     * Get all data timesheet 
+     */
+    public function getAllByUserTimeNow($userId)
+    {
+        $sql = $this->timesheet->where('user_id', $userId);
+        $firstDate = Carbon::now()->format('Y-m-01 00:00:00)');
+        $endDate = Carbon::now()->format('Y-m-d 23:59:59)');
+
+        return $sql->where('day_selected', '>=', $firstDate)
+            ->where('day_selected', '<=', $endDate)
+            ->get()->count();
     }
 
     /**

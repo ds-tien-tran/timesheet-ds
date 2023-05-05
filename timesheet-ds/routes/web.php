@@ -49,17 +49,32 @@ Route::middleware(['checkLogin'])->group(function () {
     //Admin
     Route::middleware(['checkAdmin'])->group(function () {
         Route::name('user.')->prefix('user')->group(function() {
-            Route::get('list', [UserController::class, 'list'])->name('list');
             Route::delete('destroy/{user}', [UserController::class, 'destroy'])->name('destroy');
             Route::get('info-user/{user}', [UserController::class, 'infoUser'])->name('infoUser');
             Route::patch('change-role/{user}', [UserController::class, 'changeRole'])->name('changeRole');
+            Route::get('list-manager', [UserController::class, 'listManager'])->name('listManager');
+            Route::get('list-manager-user/{userId}', [UserController::class, 'listManagerUser'])->name('listManagerUser');
+            Route::get('list-user-no-manager', [UserController::class, 'listUserNoManager'])->name('listUserNoManager');
+            Route::get('search-user-no-manager', [UserController::class, 'searchUserNoManager'])->name('searchUserNoManager');
         });
 
         Route::name('timesheet.')->prefix('timesheet')->group(function() {
-            Route::get('list-timesheet/{userId}', [TimesheetController::class, 'listTimesheet'])->name('listTimesheet');
-            Route::get('show-detail/{timesheet}', [TimesheetController::class, 'showDetail'])->name('showDetail');
-            Route::patch('change-status/{timesheet}', [TimesheetController::class, 'changeStatus'])->name('changeStatus');
             Route::get('export-timesheet/{userId}', [TimesheetController::class, 'exportTimesheet'])->name('exportTimesheet');
+        });
+    });
+
+    //Admin-Manger
+    Route::middleware(['checkAdminManager'])->group(function () {
+        Route::name('user.')->prefix('user')->group(function() {
+            Route::get('list', [UserController::class, 'list'])->name('list');
+            Route::get('list-user', [UserController::class, 'listUser'])->name('listUser');
+        });
+
+        // approve timesheet
+        Route::name('timesheet.')->prefix('timesheet')->group(function() {
+            Route::get('list-timesheet/{userId}', [TimesheetController::class, 'listTimesheet'])->name('listTimesheet');
+            Route::patch('change-status/{timesheet}', [TimesheetController::class, 'changeStatus'])->name('changeStatus');
+            Route::get('show-detail/{timesheet}', [TimesheetController::class, 'showDetail'])->name('showDetail');
         });
     });
 });

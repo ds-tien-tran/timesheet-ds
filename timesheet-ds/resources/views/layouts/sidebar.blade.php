@@ -43,6 +43,11 @@
                 <i class="fas fa-fw fa-table"></i>
                 <span>List User-Report</span></a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('user.listManager')}}">
+                <i class="fas fa-fw fa-table"></i>
+                <span>List Manager-User</span></a>
+        </li>
     @endcan
 
     <!-- Divider -->
