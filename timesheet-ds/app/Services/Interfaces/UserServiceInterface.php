@@ -9,4 +9,5 @@ interface UserServiceInterface
     public function getList();
     public function destroy($user);
     public function changeRole($user, $request);
+    public function getListByManager($id);
 }

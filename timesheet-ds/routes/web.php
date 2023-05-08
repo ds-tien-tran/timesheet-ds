@@ -49,17 +49,27 @@ Route::middleware(['checkLogin'])->group(function () {
     //Admin
     Route::middleware(['checkAdmin'])->group(function () {
         Route::name('user.')->prefix('user')->group(function() {
-            Route::get('list', [UserController::class, 'list'])->name('list');
             Route::delete('destroy/{user}', [UserController::class, 'destroy'])->name('destroy');
             Route::get('info-user/{user}', [UserController::class, 'infoUser'])->name('infoUser');
             Route::patch('change-role/{user}', [UserController::class, 'changeRole'])->name('changeRole');
         });
 
         Route::name('timesheet.')->prefix('timesheet')->group(function() {
-            Route::get('list-timesheet/{userId}', [TimesheetController::class, 'listTimesheet'])->name('listTimesheet');
-            Route::get('show-detail/{timesheet}', [TimesheetController::class, 'showDetail'])->name('showDetail');
-            Route::patch('change-status/{timesheet}', [TimesheetController::class, 'changeStatus'])->name('changeStatus');
             Route::get('export-timesheet/{userId}', [TimesheetController::class, 'exportTimesheet'])->name('exportTimesheet');
+        });
+    });
+
+    //Admin-Manger
+    Route::middleware(['checkAdminManager'])->group(function () {
+        Route::name('user.')->prefix('user')->group(function() {
+            Route::get('list', [UserController::class, 'list'])->name('list');
+        });
+
+        // approve timesheet
+        Route::name('timesheet.')->prefix('timesheet')->group(function() {
+            Route::get('list-timesheet/{userId}', [TimesheetController::class, 'listTimesheet'])->name('listTimesheet');
+            Route::patch('change-status/{timesheet}', [TimesheetController::class, 'changeStatus'])->name('changeStatus');
+            Route::get('show-detail/{timesheet}', [TimesheetController::class, 'showDetail'])->name('showDetail');
         });
     });
 });
