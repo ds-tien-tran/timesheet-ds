@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -45,7 +46,26 @@ class UserController extends Controller
      */
     public function list()
     {
-        $users = $this->userService->getList();
+        $users = [];
+        //Check admin show all , Manager show user's
+        if (Auth::user())
+        {
+            foreach(Auth::user()->roles as $role)
+            {
+                if ($role->name == 'admin')
+                {
+                    $users = $this->userService->getList();
+                }
+                if ($role->name == 'manager')
+                {
+                    $users = $this->userService->getListByManager(Auth::user()->id);
+                    // dd($users);
+                }
+            }
+        
+        }
+        // $users = $this->userService->getList();
+        // dd($users);
         
         return view('user.list', compact('users'));
     }

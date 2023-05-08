@@ -14,7 +14,9 @@
                 @csrf
                 <input class="mr-2 form-control w-200p monthSelect" name="month_select" type="month" hidden>
                 {{-- <a href="{{ route('timesheet.exportTimesheet', $user->id) }}" class="btn btn-success" form='formMonth'><i class="fas fa-file-download mr-2"></i>Export timesheet</a> --}}
-                <button type="submit" class="btn btn-success"><i class="fas fa-file-download mr-2"></i>Export timesheet</button>
+                @can('seenAdmin')
+                    <button type="submit" class="btn btn-success"><i class="fas fa-file-download mr-2"></i>Export timesheet</button>
+                @endcan
             </form>
         </div>
     </div>

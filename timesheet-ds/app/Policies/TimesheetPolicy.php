@@ -44,7 +44,7 @@ class TimesheetPolicy
          * Admin approve timesheet
          */
         foreach ($user->roles as $role) {
-            if ($role->name == 'admin')
+            if ($role->name == 'admin' || $role->name == 'manager')
             {
              return true;
             }
@@ -53,18 +53,4 @@ class TimesheetPolicy
         return $user->id === $timesheet->user_id;
     }
 
-    /**
-     * Show route if admin
-     */
-    public function seen(User $user)
-    {
-        foreach ($user->roles as $role) {
-           if ($role->name == 'admin')
-           {
-            return true;
-           }
-        }
-
-        return false;
-    }
 }
