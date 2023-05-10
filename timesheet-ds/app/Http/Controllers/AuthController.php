@@ -98,6 +98,9 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        dd(1);
+        dd(1);
+        dd(22);
         return redirect('login')->with(Auth::logout());
     }
 }
