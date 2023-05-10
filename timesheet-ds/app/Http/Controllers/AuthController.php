@@ -100,7 +100,7 @@ class AuthController extends Controller
     {
         dd(1);
         dd(1);
-        dd(22);
+
         return redirect('login')->with(Auth::logout());
     }
 }
